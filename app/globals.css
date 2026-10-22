@@ -1,26 +1,169 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --lime: #a6ef12;
+  --lime-ink: #86c51a;
+  --lime-edge: #6c9a0b;
+  --paper: #ececec;
+  --ink: #0d0d0d;
+  --night: #0a0a0b;
+  --muted: color-mix(in oklab, var(--ink) 72%, transparent);
+
+  /* Layout rhythm — every section and edge aligns to these. */
+  --gutter: 20px;
+  --section-y: clamp(88px, 14vh, 168px);
+  --stack-gap: clamp(56px, 9vh, 104px); /* heading → content */
+  --stair: 15vh; /* height of <StairEdge> (3 steps × 5vh) */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@media (width >= 48rem) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --gutter: 40px;
   }
 }
 
+@theme inline {
+  --color-lime: var(--lime);
+  --color-lime-ink: var(--lime-ink);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-night: var(--night);
+  --color-muted: var(--muted);
+  --font-sans: var(--nf-geist), system-ui, sans-serif;
+  --font-display: var(--nf-anton), Impact, sans-serif;
+  --font-bebas: var(--nf-bebas), Impact, sans-serif;
+  --spacing-gutter: var(--gutter);
+  --spacing-section: var(--section-y);
+  --spacing-stack: var(--stack-gap);
+  --spacing-stair: var(--stair);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--nf-geist), system-ui, sans-serif;
+}
+
+@layer components {
+  /* Display headings (Anton, uppercase) */
+  .heading {
+    font-family: var(--nf-anton), Impact, sans-serif;
+    text-transform: uppercase;
+    font-size: clamp(2.6rem, 6.45vw, 9rem);
+    line-height: 1.25;
+  }
+
+  /* Base for condensed uppercase text */
+  .label {
+    font-family: var(--nf-anton), Impact, sans-serif;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  /* Small display titles: service labels, process steps, project names */
+  .title {
+    font-family: var(--nf-anton), Impact, sans-serif;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    font-size: 18px;
+  }
+
+  /* Supporting paragraphs */
+  .body {
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--muted);
+  }
+
+  /* Small uppercase meta text: tags, captions */
+  .caption {
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  @media (width >= 48rem) {
+    .title {
+      font-size: 22px;
+    }
+    .caption {
+      font-size: 13px;
+    }
+  }
+
+  /* Call-to-action buttons. Hover lifts the slab onto a darker edge, like the reveal blocks. */
+  .btn {
+    display: inline-flex;
+    height: 44px;
+    align-items: center;
+    gap: 8px;
+    padding-inline: 20px;
+    border-radius: 4px;
+    font-family: var(--nf-anton), Impact, sans-serif;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    transition:
+      transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 0.2s;
+  }
+  .btn:hover {
+    transform: translateY(-3px);
+  }
+  .btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+    transition-duration: 0.05s;
+  }
+  .btn-lime {
+    background: var(--lime);
+    color: var(--ink);
+  }
+  .btn-lime:hover {
+    box-shadow: 0 3px 0 var(--lime-edge);
+  }
+  .btn-dark {
+    background: #0b0b0b;
+    color: #fff;
+  }
+  .btn-dark:hover {
+    box-shadow: 0 3px 0 #3c3c3c;
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+}
+
+/* Visible keyboard focus everywhere; lime on dark surfaces. */
+:where(a, button):focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+:where(nav, [data-theme="dark"]) :where(a, button):focus-visible {
+  outline-color: var(--lime);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .btn:hover {
+    transform: none;
+    transition: none;
+  }
+}
+
+::selection {
+  background: var(--lime);
+  color: var(--ink);
 }
